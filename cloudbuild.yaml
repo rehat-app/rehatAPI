@@ -3,6 +3,19 @@ steps:
     entrypoint: npm
     args: ['install']
 
+  # Build with .env
+  - name: node
+    entrypoint: npm
+    args: ['run', 'create-env']
+    env:
+      - 'PORT=${_PORT}'
+      - 'PROJECT_ID=${_PROJECT_ID}'
+      - 'DB_HOST=${_DB_HOST}'
+      - 'DB_USER=${_DB_USER}'
+      - 'DB_PASSWORD=${_DB_PASSWORD}'
+      - 'DB_DATABASE=${_DB_DATABASE}'
+      - 'DB_PORT=${_DB_PORT}'
+
   # Build the container image
   - name: gcr.io/cloud-builders/docker
     args:
