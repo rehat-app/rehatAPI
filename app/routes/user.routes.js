@@ -22,4 +22,7 @@ module.exports = function (app) {
 
   // GET Data User
   app.get('/api/profile', [authJwt.verifyToken], controller.dataProfile);
+
+  // Verify JWT Token
+  app.get('/api/checkToken', [authJwt.verifyToken], controller.checkToken);
 };

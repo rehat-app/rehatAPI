@@ -42,7 +42,7 @@ exports.dataProfile = async (req, res) => {
   }
 };
 
-// === User Controller Content
-exports.getDataUser = (req, res) => {
-  res.redirect('/api/test/user');
+// Check Token
+exports.checkToken = (req, res) => {
+  res.status(200).send({ rescode: 200, message: 'Token Valid' });
 };

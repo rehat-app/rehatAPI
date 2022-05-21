@@ -28,7 +28,7 @@ const pingConnection = async () => {
 pingConnection();
 
 // todo Initialize Database Login
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({ force: false }).then(() => {
   console.log('Drop and Resync Db');
 });
 
