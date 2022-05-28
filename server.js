@@ -29,7 +29,7 @@ pingConnection();
 
 // todo Initialize Database Login
 db.sequelize.sync({ force: false }).then(() => {
-  console.log('Drop and Resync Db');
+  console.log('Resync Db');
 });
 
 // todo Initial table role

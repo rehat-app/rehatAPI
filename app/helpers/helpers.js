@@ -12,7 +12,8 @@ const bucket = gc.bucket('rehat'); // should be your bucket name
  *   "originalname" and "buffer" as keys
  */
 
-exports.uploadImage = (file) => new Promise((resolve, reject) => {
+exports.uploadImage = (file) =>
+  new Promise((resolve, reject) => {
     const { originalname, buffer } = file;
 
     const blob = bucket.file(originalname.replace(/ /g, '_'));
@@ -27,7 +28,10 @@ exports.uploadImage = (file) => new Promise((resolve, reject) => {
         resolve(publicUrl);
       })
       .on('error', () => {
-        reject('Unable to upload image, something went wrong');
+        reject({
+          status: 'error',
+          message: 'Unable to upload image, something went wrong',
+        });
       })
       .end(buffer);
   });

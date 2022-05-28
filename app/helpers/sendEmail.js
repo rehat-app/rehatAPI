@@ -4,6 +4,7 @@ exports.sendEmail = async (email, token) => {
   const userEmail = email;
   const userToken = token;
 
+  // Set Sender
   const mail = nodemailer.createTransport({
     service: 'gmail',
     auth: {

@@ -25,4 +25,12 @@ module.exports = function (app) {
 
   // Verify JWT Token
   app.get('/api/checkToken', [authJwt.verifyToken], controller.checkToken);
+
+  // Edit Profile
+  app.post('/api/editProfile', [authJwt.verifyToken], controller.editProfile);
+
+  // Upload Image to GCS
+  app.post('/api/upload', controller.uploadToGCS);
+
+  // app.post('/api/reqImg', controller.experiments);
 };
