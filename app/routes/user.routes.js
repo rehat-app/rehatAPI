@@ -32,5 +32,18 @@ module.exports = function (app) {
   // Upload Image to GCS
   app.post('/api/upload', controller.uploadToGCS);
 
-  // app.post('/api/reqImg', controller.experiments);
+  // Post analyses data to DB
+  app.post('/api/postAnalysis', [authJwt.verifyToken], controller.postAnalysis);
+  // Get all analyses during a week
+  app.get(
+    '/api/weeklyAnalysis',
+    [authJwt.verifyToken],
+    controller.getAnalysisInWeek
+  );
+  // Get specific analysis by id
+  app.get(
+    '/api/weeklyAnalysis/:id',
+    [authJwt.verifyToken],
+    controller.getAnalysisById
+  );
 };

@@ -1,5 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
   const Analysis = sequelize.define('analysis', {
+    user_id: {
+      type: Sequelize.INTEGER,
+    },
     hanging_eyelids: {
       type: Sequelize.STRING,
     },

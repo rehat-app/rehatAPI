@@ -1,7 +1,9 @@
-const { user } = require('../models');
 const db = require('../models');
 const { uploadImage } = require('../helpers/helpers');
 const User = db.user;
+const sequelize = db.sequelize;
+const { QueryTypes } = require('sequelize');
+const Analysis = db.analysis;
 const { Op } = db.Sequelize;
 
 exports.allAccess = (req, res) => {
@@ -107,6 +109,74 @@ exports.uploadToGCS = async (req, res) => {
       .status(200)
       .send({ message: 'Upload success', urlImage: imageUrl, rescode: '200' });
   } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+// Post Analysis
+exports.postAnalysis = async (req, res) => {
+  try {
+    const eyelids = req.body.hangingEyelids;
+    const eyebag = req.body.eyesBag;
+    const calculationResult = req.body.calculation;
+    const imgUrl = req.body.urlImage;
+
+    await Analysis.create({
+      user_id: req.userId,
+      hanging_eyelids: eyelids,
+      eyes_bag: eyebag,
+      calculation: calculationResult,
+      face_img: imgUrl,
+    });
+
+    return res
+      .status(200)
+      .send({ message: 'Hasil analysis berhasil disimpan', rescode: '200' });
+  } catch (e) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+// Get [allAnalysis] In week by [userId]
+exports.getAnalysisInWeek = async (req, res) => {
+  try {
+    const allAnalysis = await sequelize.query(
+      `SELECT id, face_img as urlImage, calculation, DATE_FORMAT(DATE(createdAt), "%W") as day, DATE_FORMAT(DATE(createdAt), '%d %M %Y') as date, DATE_FORMAT(createdAt,'%k:%i') as time FROM coba WHERE DATE(createdAt) >= DATE(NOW()) - INTERVAL 7 DAY AND DATE(createdAt) <= DATE(NOW()) AND id_user = ${req.userId};`,
+      { type: QueryTypes.SELECT }
+    );
+
+    return res.status(200).send({
+      message: 'Get data analysis successfully',
+      data: allAnalysis,
+      // calculation:
+      rescode: '200',
+    });
+  } catch (e) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+// Get Analysis by [idAnalysis]
+exports.getAnalysisById = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const analysis = await Analysis.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!Analysis) {
+      return res
+        .status(404)
+        .send({ message: 'Data analysis not found!', rescode: '404' });
+    }
+
+    return res.status(200).send({
+      message: 'Get data analysis successfully',
+      data: analysis,
+      rescode: '200',
+    });
+  } catch (e) {
     return res.status(500).send({ message: error.message });
   }
 };
