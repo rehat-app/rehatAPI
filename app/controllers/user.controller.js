@@ -6,6 +6,8 @@ const { QueryTypes } = require('sequelize');
 const Analysis = db.analysis;
 const { Op } = db.Sequelize;
 
+const pdfService = require('../helpers/buildPdf');
+
 exports.allAccess = (req, res) => {
   res.status(200).send('Public Content.');
 };
@@ -19,6 +21,7 @@ exports.adminBoard = (req, res) => {
   res.status(200).send('Admin Content.');
 };
 
+// todo: PROFILE
 // GET Data Profile
 exports.dataProfile = async (req, res) => {
   try {
@@ -101,6 +104,8 @@ exports.editProfile = async (req, res) => {
   }
 };
 
+// todo: ANALYSIS
+// Upload captured photo to GCS
 exports.uploadToGCS = async (req, res) => {
   try {
     const imageUrl = await uploadImage(req.file);
@@ -179,6 +184,28 @@ exports.getAnalysisById = async (req, res) => {
   } catch (e) {
     return res.status(500).send({ message: error.message });
   }
+};
+
+// todo: Upload to PDF
+exports.uploadToPDF = async (req, res) => {
+  const requiredData = {
+    // stil hardcode
+    username: 'Hakim',
+    day: 'Kamis',
+    data: '12 May 2022',
+    time: '14:12',
+  };
+
+  const stream = res.writeHead(200, {
+    'Content-Type': 'application/pdf',
+    'Content-Disposition': `attachment;filename=report-Rehat-${requiredData.username}.pdf`,
+  });
+
+  pdfService.buildPDF(
+    (chunk) => stream.write(chunk),
+    () => stream.end(),
+    requiredData
+  );
 };
 
 // exports.experiments = (req, res) => {

@@ -46,4 +46,7 @@ module.exports = function (app) {
     [authJwt.verifyToken],
     controller.getAnalysisById
   );
+
+  // Generate to PDF
+  app.get('/api/pdf', controller.uploadToPDF);
 };
