@@ -5,6 +5,7 @@ const decode = require('../helpers/decode.js');
 const db = require('../models');
 
 const User = db.user;
+const Role = db.role;
 
 verifyToken = (req, res, next) => {
   const { token } = req.session;
@@ -47,6 +48,54 @@ isAdmin = async (req, res, next) => {
   }
 };
 
+isHost = async (req, res, next) => {
+  try {
+    const role = await Role.findOne({
+      where: {
+        id_user: req.userId,
+      },
+    });
+
+    // eslint-disable-next-line
+    const role_status = role === null ? null : role.dataValues.user_role;
+
+    if (role_status === 'admin') {
+      return res.status(403).send({
+        rescode: 403,
+        message: 'Kamu admin!!!',
+      });
+    }
+
+    next();
+  } catch (e) {
+    return res.status(500).send({ message: e.message });
+  }
+};
+
+mustHost = async (req, res, next) => {
+  try {
+    const role = await Role.findOne({
+      where: {
+        id_user: req.userId,
+        id_community: req.params.id,
+      },
+    });
+
+    const role_status = role === null ? null : role.dataValues.user_role;
+
+    if (role_status === 'member') {
+      return res.status(401).send({
+        rescode: 401,
+        message: 'Unauthorized!!!',
+      });
+    }
+
+    next();
+  } catch (e) {
+    return res.status(500).send({ message: e.message });
+  }
+};
+
 // isModeratorOrAdmin = async (req, res, next) => {
 //   try {
 //     const user = await User.findByPk(req.userId);
@@ -72,6 +121,8 @@ isAdmin = async (req, res, next) => {
 const authJwt = {
   verifyToken,
   isAdmin,
+  isHost,
+  mustHost,
   // isModeratorOrAdmin,
 };
 module.exports = authJwt;

@@ -28,7 +28,8 @@
     "nodemailer": "^6.7.5",
     "pdfkit": "^0.13.0",
     "rand-token": "^1.0.1",
-    "sequelize": "^6.19.0"
+    "sequelize": "^6.19.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "^8.15.0",
