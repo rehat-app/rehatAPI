@@ -23,6 +23,7 @@ db.user = require('./user.model.js')(sequelize, Sequelize);
 db.analysis = require('./analysis.model.js')(sequelize, Sequelize);
 db.role = require('../models/role.model.js')(sequelize, Sequelize);
 db.community = require('../models/community.model.js')(sequelize, Sequelize);
+db.agenda = require('../models/agenda.model.js')(sequelize, Sequelize);
 db.user_agenda_ref = require('../models/user_agenda_ref.model.js')(
   sequelize,
   Sequelize

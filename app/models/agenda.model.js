@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     agenda_date: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
     },
     description: {
       type: Sequelize.STRING,

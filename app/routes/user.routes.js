@@ -47,6 +47,9 @@ module.exports = function (app) {
     controller.getAnalysisById
   );
 
+  //todo: Predict
+  app.post('/api/predict', [authJwt.verifyToken], controller.getPrediction);
+
   // Generate to PDF
   app.get('/api/pdf', controller.uploadToPDF);
 };

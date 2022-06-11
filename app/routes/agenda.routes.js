@@ -10,8 +10,8 @@ module.exports = function (app) {
   //todo: Create Agenda - Host mandatory
   app.post(
     '/api/dataCommunity/:id/createAgenda',
-    // [authJwt.verifyToken, authJwt.isHost],
-    controller.logging
+    [authJwt.verifyToken, authJwt.isHostCommunity],
+    controller.createAgenda
   );
 
   //todo: Join Agenda

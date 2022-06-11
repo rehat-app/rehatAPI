@@ -4,6 +4,7 @@ const User = db.user;
 const sequelize = db.sequelize;
 const { QueryTypes } = require('sequelize');
 const Analysis = db.analysis;
+const axios = require('axios');
 const { Op } = db.Sequelize;
 
 const pdfService = require('../helpers/buildPdf');
@@ -206,6 +207,88 @@ exports.uploadToPDF = async (req, res) => {
     () => stream.end(),
     requiredData
   );
+};
+
+// todo: Get ML Model Prediction
+exports.getPrediction = async (req, res) => {
+  try {
+    const imageUrl = await uploadImage(req.file); // return gcs url
+
+    const path = 'https://rehat-351413.et.r.appspot.com/predict';
+    let predictResponse = await axios.post(path, {
+      url: imageUrl,
+    });
+    predictResponse = predictResponse.data;
+
+    // Eyebag Condition
+    let eyebagCondition = '';
+    switch (predictResponse.index_eyebag) {
+      case 0:
+        eyebagCondition = 'Big eyebag';
+        break;
+      case 1:
+        eyebagCondition = 'No eyebag';
+        break;
+      case 2:
+        eyebagCondition = 'Normal eyebag';
+        break;
+
+      default:
+        eyebagCondition = 'Unpredicted';
+        break;
+    }
+
+    // Eyelid Condition
+    let eyelidCondition = '';
+    if (predictResponse.index_eyelid) eyelidCondition = 'normal';
+    else eyelidCondition = 'tired eyelid';
+
+    // Final Calculation
+    let finalCondition = {
+      probability:
+        (predictResponse.prob_eyebag + predictResponse.prob_eyelid) / 2,
+    };
+    switch (predictResponse.index_eyelid + predictResponse.index_eyebag) {
+      case 0:
+        finalCondition.header = '';
+        finalCondition.detail = '';
+        break;
+      case 1:
+        finalCondition.header = 'Tambah lagi jam tidurmu';
+        finalCondition.detail =
+          'Tidur 8 jam di hari libur mungkin menjadi solusi';
+        break;
+      case 2:
+        finalCondition.header = '';
+        finalCondition.detail = '';
+        break;
+      case 3:
+        finalCondition.header = '';
+        finalCondition.detail = '';
+        break;
+      default:
+        finalCondition.header = 'Unvalid';
+        finalCondition.detail = 'Unvalid';
+        break;
+    }
+
+    const prediction = {
+      image: imageUrl,
+      ...predictResponse,
+      eyebagCondition,
+      eyelidCondition,
+      finalCondition,
+    };
+
+    return res.status(200).send({
+      message: 'Prediction success',
+      prediction: prediction,
+      // calculation:
+      rescode: '200',
+    });
+  } catch (e) {
+    return res.status(500).send({ message: error.message });
+  }
 };
 
 // exports.experiments = (req, res) => {

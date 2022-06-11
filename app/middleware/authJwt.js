@@ -100,10 +100,34 @@ mustHost = async (req, res, next) => {
   }
 };
 
+isHostCommunity = async (req, res, next) => {
+  try {
+    const sql = `
+      SELECT user_role FROM roles 
+        JOIN communities ON roles.id_community = communities.id  
+        WHERE communities.id = '${req.params.id}' AND roles.id_user = ${req.userId};
+    `;
+
+    const role = await sequelize.query(sql, { type: QueryTypes.SELECT });
+
+    if (role[0].user_role != 'admin') {
+      return res.status(401).send({
+        rescode: 401,
+        message: 'Unauthorized',
+      });
+    }
+
+    next();
+  } catch (e) {
+    return res.status(500).send({ message: e.message });
+  }
+};
+
 const authJwt = {
   verifyToken,
   isAdmin,
   isHost,
   mustHost,
+  isHostCommunity,
 };
 module.exports = authJwt;
