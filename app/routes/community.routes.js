@@ -7,31 +7,31 @@ module.exports = function (app) {
     next();
   });
 
-  // Create community
+  //todo: Create community
   app.post(
     '/api/createCommunity',
     [authJwt.verifyToken],
     controller.createCommunity
   );
 
-  // Join community
+  //todo: Join community
   app.post(
     '/api/joinCommunity',
     [authJwt.verifyToken, authJwt.isHost],
     controller.joinCommunity
   );
 
-  // Get All Community
+  //todo: Get All Community
   app.get('/api/communities', [authJwt.verifyToken], controller.allCommunities);
 
-  // Get all data community with all members who have been joined community
+  //todo: Get all data community with all members who have been joined community
   app.get(
     '/api/dataCommunity/:id',
     [authJwt.verifyToken],
     controller.dataCommunity
   );
 
-  // todo: Logging
+  //? todo: Logging
   app.get(
     '/api/log',
     [authJwt.verifyToken, authJwt.isHost],

@@ -34,13 +34,11 @@ exports.createCommunity = async (req, res) => {
       user_role: 'admin',
     });
 
-    return res
-      .status(200)
-      .send({
-        message: 'Komunitas berhasil dibuat',
-        idCommunity: idCommunity,
-        rescode: '200',
-      });
+    return res.status(200).send({
+      message: 'Komunitas berhasil dibuat',
+      idCommunity: idCommunity,
+      rescode: '200',
+    });
   } catch (e) {
     return res.status(500).send({ message: e.message });
   }

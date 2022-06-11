@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config.js');
 const decode = require('../helpers/decode.js');
-
 const db = require('../models');
+const sequelize = db.sequelize;
+const { QueryTypes } = require('sequelize');
 
 const User = db.user;
 const Role = db.role;
@@ -48,16 +49,19 @@ isAdmin = async (req, res, next) => {
   }
 };
 
+// IsHost verification just for creating community
 isHost = async (req, res, next) => {
   try {
-    const role = await Role.findOne({
-      where: {
-        id_user: req.userId,
-      },
-    });
+    const sql = `
+      SELECT * FROM roles 
+        JOIN communities ON roles.id_community = communities.id  
+        WHERE communities.token = '${req.body.token}' AND roles.id_user = ${req.userId};
+    `;
 
-    // eslint-disable-next-line
-    const role_status = role === null ? null : role.dataValues.user_role;
+    const role = await sequelize.query(sql, { type: QueryTypes.SELECT });
+
+    const role_status = role[0] === null ? null : role[0].user_role;
+    console.log('role ==> ', role_status);
 
     if (role_status === 'admin') {
       return res.status(403).send({
@@ -96,33 +100,10 @@ mustHost = async (req, res, next) => {
   }
 };
 
-// isModeratorOrAdmin = async (req, res, next) => {
-//   try {
-//     const user = await User.findByPk(req.userId);
-//     const roles = await user.getRoles();
-//     for (let i = 0; i < roles.length; i++) {
-//       if (roles[i].name === "moderator") {
-//         return next();
-//       }
-//       if (roles[i].name === "admin") {
-//         return next();
-//       }
-//     }
-//     return res.status(403).send({
-//       message: "Require Moderator or Admin Role!",
-//     });
-//   } catch (error) {
-//     return res.status(500).send({
-//       message: "Unable to validate Moderator or Admin role!",
-//     });
-//   }
-// };
-
 const authJwt = {
   verifyToken,
   isAdmin,
   isHost,
   mustHost,
-  // isModeratorOrAdmin,
 };
 module.exports = authJwt;
