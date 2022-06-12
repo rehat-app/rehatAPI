@@ -4,6 +4,7 @@ const sequelize = db.sequelize;
 const { QueryTypes } = require('sequelize');
 const Analysis = db.analysis;
 const Community = db.community;
+const Color = db.color;
 const Role = db.role;
 const { Op } = db.Sequelize;
 const { v4: uuidv4 } = require('uuid');
@@ -32,6 +33,15 @@ exports.createCommunity = async (req, res) => {
       id_user: idUser,
       id_community: idCommunity,
       user_role: 'admin',
+    });
+
+    // Insert color Community
+    await Color.create({
+      hue: ~~(360 * Math.random()),
+      saturation: '70%',
+      light: '70%',
+      opacity: 0.8,
+      id_community: idCommunity,
     });
 
     return res.status(200).send({
@@ -87,9 +97,11 @@ exports.joinCommunity = async (req, res) => {
       });
     }
 
-    return res
-      .status(200)
-      .send({ message: 'Berhasil gabung komunitas', rescode: '200' });
+    return res.status(200).send({
+      message: 'Berhasil gabung komunitas',
+      rescode: '200',
+      id_community: idCommunity,
+    });
   } catch (e) {
     return res.status(500).send({ message: e.message });
   }
@@ -138,6 +150,13 @@ exports.dataCommunity = async (req, res) => {
       type: QueryTypes.SELECT,
     });
 
+    const sqlColor = `
+    SELECT hue, saturation, light, opoacity FROM colors 
+      JOIN roles ON users.id = roles.id_user 
+      JOIN communities ON roles.id_community = communities.id 
+      WHERE roles.user_role = "admin" AND communities.id = ${id};
+  `;
+
     return res
       .status(200)
       .send({ community: dataCommunity, members: dataMember, rescode: '200' });
@@ -147,9 +166,8 @@ exports.dataCommunity = async (req, res) => {
 };
 
 exports.logging = async (req, res) => {
-  const tokenInvitation = uuidv4().substring(0, 6);
+  // const tokenInvitation = uuidv4().substring(0, 6);
   // try {
-
   //   return res
   //     .status(200)
   //     .send({ message: 'Hasil analysis berhasil disimpan', rescode: '200' });

@@ -40,12 +40,25 @@ exports.createAgenda = async (req, res) => {
   }
 };
 
+exports.joinAgenda = async (req, res) => {
+  try {
+    return res.status(200).send({
+      message: 'Agenda berhasil dibuat',
+      rescode: '200',
+    });
+  } catch (e) {
+    return res.status(500).send({ message: e.message });
+  }
+};
+
 exports.logging = async (req, res) => {
-  const date = new Date('2022-06-11');
-  console.log('Logging1 ==> ', date.toDateString());
+  // const date = new Date('2022-06-11');
+  // console.log('Logging1 ==> ', date.toDateString());
+
+  console.log('Logging1 ==> ', `hsla(${~~(360 * Math.random())},70%,70%,0.8)`); //!
 
   return res.status(200).send({
     rescode: 200,
-    log: date.toDateString(),
+    // log: date.toDateString(),
   });
 };

@@ -28,6 +28,7 @@ db.user_agenda_ref = require('../models/user_agenda_ref.model.js')(
   sequelize,
   Sequelize
 );
+db.color = require('../models/color.model.js')(sequelize, Sequelize);
 // db.role.belongsToMany(db.user, {
 //   through: "user_roles",
 //   foreignKey: "roleId",

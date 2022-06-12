@@ -227,10 +227,10 @@ exports.getPrediction = async (req, res) => {
         eyebagCondition = 'Big eyebag';
         break;
       case 1:
-        eyebagCondition = 'No eyebag';
+        eyebagCondition = 'Normal eyebag';
         break;
       case 2:
-        eyebagCondition = 'Normal eyebag';
+        eyebagCondition = 'No eyebag';
         break;
 
       default:
@@ -250,21 +250,26 @@ exports.getPrediction = async (req, res) => {
     };
     switch (predictResponse.index_eyelid + predictResponse.index_eyebag) {
       case 0:
-        finalCondition.header = '';
-        finalCondition.detail = '';
+        finalCondition.header = 'Alert!!! Kamu punya gejala Sleep Deprivation!';
+        finalCondition.detail =
+          'Kualitas tidurmu sangat buruk. Kamu punya risiko penyakit kronis tinggi. Gunakanlah satu hari 24 jam untuk beristirahat dan jaga pola makan';
         break;
       case 1:
-        finalCondition.header = 'Tambah lagi jam tidurmu';
+        finalCondition.header =
+          'Perhatikan lagi jam tidurmu!!! Kamu termasuk Sleep Deprivated';
         finalCondition.detail =
-          'Tidur 8 jam di hari libur mungkin menjadi solusi';
+          'Rata-rata jam tidurmu tidak ideal, ada diantara (3-4 jam/hari). Gunakan satu harimu untuk tidur 7-8 jam agar produktifitas meningkat.';
         break;
       case 2:
-        finalCondition.header = '';
-        finalCondition.detail = '';
+        finalCondition.header =
+          'Kualitas tidurmu cukup baik. Namun, berpotensi gejala Sleep Deprivation';
+        finalCondition.detail =
+          'Rata-rata jam tidurmu cukup baik (6-7 jam/hari). Sempatkan tidur siang 1/2 atau 1 jam untuk produktifitas yang lebih baik.';
         break;
       case 3:
-        finalCondition.header = '';
-        finalCondition.detail = '';
+        finalCondition.header = 'Selamat jam tidurmu tercukupi';
+        finalCondition.detail =
+          'Anda aman gejala Sleep Deprivation, pertahankan pola tidur sehatmu agar produktif setiap waktu';
         break;
       default:
         finalCondition.header = 'Unvalid';
