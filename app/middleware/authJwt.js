@@ -60,8 +60,7 @@ isHost = async (req, res, next) => {
 
     const role = await sequelize.query(sql, { type: QueryTypes.SELECT });
 
-    const role_status = role[0] === null ? null : role[0].user_role;
-    console.log('role ==> ', role_status);
+    const role_status = role[0] === undefined ? null : role[0].user_role;
 
     if (role_status === 'admin') {
       return res.status(403).send({

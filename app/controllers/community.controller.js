@@ -115,7 +115,6 @@ exports.allCommunities = async (req, res) => {
         JOIN communities ON roles.id_community = communities.id 
         WHERE roles.id_user = ${req.userId};
     `;
-
     const communities = await sequelize.query(sql, { type: QueryTypes.SELECT });
 
     return res.status(200).send({ communities: communities, rescode: '200' });
@@ -151,15 +150,20 @@ exports.dataCommunity = async (req, res) => {
     });
 
     const sqlColor = `
-    SELECT hue, saturation, light, opoacity FROM colors 
-      JOIN roles ON users.id = roles.id_user 
-      JOIN communities ON roles.id_community = communities.id 
-      WHERE roles.user_role = "admin" AND communities.id = ${id};
+    SELECT hue, saturation, light, opacity FROM colors 
+      JOIN communities ON colors.id_community = communities.id 
+      WHERE communities.id = ${id};
   `;
+    const dataColors = await sequelize.query(sqlColor, {
+      type: QueryTypes.SELECT,
+    });
 
-    return res
-      .status(200)
-      .send({ community: dataCommunity, members: dataMember, rescode: '200' });
+    return res.status(200).send({
+      community: dataCommunity,
+      members: dataMember,
+      colors: dataColors,
+      rescode: '200',
+    });
   } catch (e) {
     return res.status(500).send({ message: e.message });
   }
