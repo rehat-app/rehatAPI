@@ -1,14 +1,19 @@
 # rehatAPI
-The backend App  
+The backend App
 
-# Deploy Rehat API to Google Cloud Run
+## Our Cloud Configuration
 
-## Prerequisite
+We use Cloud Run to deploy our app backend API. We make our backend using Node.js and containerized our app using Docker. To deploy our app we use Cloud Build with cloudbuild.yaml configuration file. For our database server we use Cloud SQL, we also use Cloud Storage to store our data.
+![image](https://user-images.githubusercontent.com/99376866/173269810-929d1b2c-52df-4cb4-9ba9-edac5e6262a8.png)
+
+## Deploy Rehat API to Google Cloud Run
+
+### Prerequisite
 * GCP Account with project and billing enabled.
 
-## Steps
+### Steps
 
-### Via Cloud Build
+#### Via Cloud Build
 Do this if you want to make a CI/CD pipeline.
 
 1. Fork this repository to your own repository.
