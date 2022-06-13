@@ -115,7 +115,15 @@ exports.allCommunities = async (req, res) => {
         JOIN communities ON roles.id_community = communities.id 
         WHERE roles.id_user = ${req.userId};
     `;
-    const communities = await sequelize.query(sql, { type: QueryTypes.SELECT });
+    const sqlJoinColor = `
+      SELECT communities.id, id_user, user_role, name, hue, saturation, light, opacity FROM communities 
+        LEFT JOIN roles ON roles.id_community = communities.id
+        LEFT JOIN colors ON colors.id_community = communities.id
+        WHERE roles.id_user = ${req.userId};
+    `;
+    const communities = await sequelize.query(sqlJoinColor, {
+      type: QueryTypes.SELECT,
+    });
 
     return res.status(200).send({ communities: communities, rescode: '200' });
   } catch (e) {

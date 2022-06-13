@@ -213,6 +213,7 @@ exports.uploadToPDF = async (req, res) => {
 exports.getPrediction = async (req, res) => {
   try {
     const imageUrl = await uploadImage(req.file); // return gcs url
+    // const imageUrl = 'https://storage.googleapis.com/rehat/testing%20final.jpeg';
 
     const path = 'https://rehat-351413.et.r.appspot.com/predict';
     let predictResponse = await axios.post(path, {
@@ -238,9 +239,14 @@ exports.getPrediction = async (req, res) => {
         break;
     }
 
+    predictResponse = {
+      ...predictResponse,
+      index_eyelidFix: !predictResponse.index_eyelid,
+    };
+
     // Eyelid Condition
     let eyelidCondition = '';
-    if (predictResponse.index_eyelid) eyelidCondition = 'normal';
+    if (predictResponse.index_eyelidFix) eyelidCondition = 'normal';
     else eyelidCondition = 'tired eyelid';
 
     // Final Calculation
@@ -248,7 +254,7 @@ exports.getPrediction = async (req, res) => {
       probability:
         (predictResponse.prob_eyebag + predictResponse.prob_eyelid) / 2,
     };
-    switch (predictResponse.index_eyelid + predictResponse.index_eyebag) {
+    switch (predictResponse.index_eyelidFix + predictResponse.index_eyebag) {
       case 0:
         finalCondition.header = 'Alert!!! Kamu punya gejala Sleep Deprivation!';
         finalCondition.detail =
@@ -288,7 +294,7 @@ exports.getPrediction = async (req, res) => {
     return res.status(200).send({
       message: 'Prediction success',
       prediction: prediction,
-      // calculation:
+      imageUrl,
       rescode: '200',
     });
   } catch (e) {
