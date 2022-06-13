@@ -12,7 +12,7 @@ The backend App
 
 </br>
 
-# The Pipeline
+# The Cloud Architecture (Pipeline)
 
 ![The pipeline.](<https://storage.googleapis.com/rehat/Rehat%20Infra%20(1)-Copy%20of%20Page-2.drawio(1).png>)
 
