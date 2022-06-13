@@ -12,8 +12,6 @@ The backend App
 
 </br>
 
-![The pipeline.](<https://storage.googleapis.com/rehat/Rehat%20Infra%20(1)-Copy%20of%20Page-2.drawio(1).png>)
-
 # The Pipeline
 
 ![The pipeline.](<https://storage.googleapis.com/rehat/Rehat%20Infra%20(1)-Copy%20of%20Page-2.drawio(1).png>)
